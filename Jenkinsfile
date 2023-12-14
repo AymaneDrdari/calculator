@@ -1,26 +1,29 @@
 pipeline {
     agent any
-    
     stages {
+        stage("Checkout") {
+            steps {
+                git url: "https://github.com/majidevops/calculator.git", branch: "main"
+            }
+        }
+
         stage("Compilation") {
             steps {
-                script {
-                    sh "./gradlew compileJava"
-                }
+                sh "./gradlew compileJava"
             }
         }
-        
+
         stage("Test unitaire") {
             steps {
-                script {
-                    sh "./gradlew test"
-                }
+                sh "./gradlew test"
             }
         }
-        
-        // Vous pouvez ajouter d'autres étapes de déploiement ou de vérification ici
-    }
-    
-    // Vous pouvez également ajouter des directives post-build, notifications, etc.
-}
 
+        stage("Couverture du code") {
+            steps {
+                sh "./gradlew jacocoTestReport"
+                sh "./gradlew jacocoTestCoverageVerification"
+            }
+        }
+    }
+}
