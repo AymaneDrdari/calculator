@@ -1,12 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage("Checkout") {
-            steps {
-                git url: "https://github.com/majidevops/calculator.git", branch: "main"
-            }
-        }
-
         stage("Compilation") {
             steps {
                 sh "./gradlew compileJava"
@@ -19,9 +13,14 @@ pipeline {
             }
         }
 
-        stage("Couverture du code") {
+        stage("Code coverage") {
             steps {
                 sh "./gradlew jacocoTestReport"
+                publishHTML(target: [
+                    reportDir: 'build/reports/jacoco/test/html',
+                    reportFiles: 'index.html',
+                    reportName: "JaCoCo Report"
+                ])
                 sh "./gradlew jacocoTestCoverageVerification"
             }
         }
