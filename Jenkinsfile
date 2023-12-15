@@ -36,4 +36,11 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            mail to: 'drdari.aymane@gmail.com',
+            subject: "Cher lion Votre compilation est terminée: ${currentBuild.fullDisplayName}",
+            body: "Votre build est accompli, Veuillez vérifier: ${env.BUILD_URL}"
+        }
+    }
 }
